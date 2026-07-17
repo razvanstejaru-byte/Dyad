@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Dyad Stone Transport – Distribuție Flotă</title>
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#24211C" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Dyad Stone" />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #EDEAE2; --card: #FBFAF7; --border: #DEDACD; --border-soft: #EDEAE2;
+  --ink: #24211C; --ink-header: #2E2A23; --muted: #8A8578; --muted-dark: #5A5648;
+  --accent: #D9720B; --danger: #B23B2E;
+}
+html, body { background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; min-height: 100vh; }
+.display { font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.02em; }
+button, input, select { font-family: inherit; font-size: 1rem; }
+header.app-header { background: #24211C; padding: 22px 16px 18px; position: sticky; top: 0; z-index: 20; }
+.header-row { display: flex; align-items: center; gap: 12px; }
+.logo-box { background: var(--accent); width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.brand-title { color: #fff; font-size: 1.5rem; font-weight: 800; line-height: 1; }
+.brand-sub { color: #B8B2A2; font-size: 0.72rem; margin-top: 4px; letter-spacing: 0.03em; }
+nav.tabs { background: var(--ink-header); border-bottom: 1px solid #3D392F; display: flex; position: sticky; top: 84px; z-index: 20; }
+nav.tabs button { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 2px; background: none; border: none; cursor: pointer; font-size: 0.66rem; font-weight: 600; color: var(--muted); border-bottom: 2px solid transparent; }
+nav.tabs button.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+main { padding: 20px 16px 24px; max-width: 640px; margin: 0 auto; }
+h2.section-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); margin-bottom: 5px; }
+.field input, .field select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 7px; background: #fff; color: var(--ink); outline: none; }
+.field input:focus, .field select:focus { border-color: var(--accent); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.hint-box { background: #F1EEE4; border: 1px dashed #C9C3AF; color: var(--muted-dark); border-radius: 7px; padding: 9px 12px; font-size: 0.87rem; margin-bottom: 14px; }
+.error-box { color: var(--danger); font-size: 0.87rem; display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
+.btn-primary { width: 100%; padding: 13px; border-radius: 8px; border: none; background: var(--accent); color: var(--ink); font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 800; letter-spacing: 0.03em; cursor: pointer; }
+.btn-primary:active { opacity: 0.85; }
+.empty-state { background: var(--card); border: 1px dashed #C9C3AF; border-radius: 10px; padding: 28px 16px; text-align: center; font-size: 0.9rem; color: var(--muted); }
+.order-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+.order-head { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-soft); gap: 8px; }
+.order-client { font-weight: 600; font-size: 1rem; }
+.order-meta { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.icon-btn { background: none; border: none; cursor: pointer; padding: 5px; border-radius: 6px; color: var(--danger); font-size: 1rem; }
+.icon-btn.neutral { color: var(--muted-dark); }
+.trip-row { padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-soft); gap: 8px; }
+.trip-left { display: flex; align-items: center; gap: 8px; }
+.trip-truck { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.92rem; }
+.trip-tons { font-size: 0.75rem; color: var(--muted); }
+.status-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; border: none; cursor: pointer; white-space: nowrap; }
+.truck-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+.truck-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 8px; }
+.truck-plate { display: flex; align-items: center; gap: 7px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; }
+.truck-queue-info { font-size: 0.72rem; color: var(--muted); text-align: right; }
+.strip { display: flex; gap: 2px; height: 12px; border-radius: 999px; overflow: hidden; background: var(--bg); }
+.strip > div { height: 100%; }
+.truck-active-tons { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+.reason-tag { font-size: 0.72rem; color: var(--danger); margin-top: 6px; }
+.capacity-row { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--muted); margin-top: 8px; }
+.capacity-row input { width: 64px; padding: 5px 7px; border: 1px solid var(--border); border-radius: 5px; font-size: 0.8rem; background: #fff; }
+.flota-filters { display: flex; gap: 8px; margin-bottom: 16px; }
+.flota-filters button { flex: 1; padding: 9px; border-radius: 7px; border: 1px solid var(--border); background: #fff; font-size: 0.78rem; font-weight: 600; color: var(--muted-dark); cursor: pointer; }
+.flota-filters button.active { background: var(--ink-header); color: #fff; border-color: var(--ink-header); }
+.search-box { margin-bottom: 14px; }
+.search-box input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 7px; background: #fff; color: var(--ink); outline: none; }
+.search-box input:focus { border-color: var(--accent); }
+.queue-section { margin-bottom: 22px; }
+.queue-section h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 10px; color: var(--muted-dark); letter-spacing: 0.02em; }
+.queue-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 8px; }
+.queue-item-info .q-client { font-weight: 600; font-size: 0.9rem; }
+.queue-item-info .q-meta { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.queue-arrows { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.queue-arrows button { background: none; border: 1px solid var(--border); border-radius: 6px; width: 28px; height: 28px; cursor: pointer; color: var(--muted-dark); font-size: 0.85rem; }
+.queue-arrows button:disabled { opacity: 0.3; cursor: default; }
+.btn-small { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: #fff; font-size: 0.76rem; font-weight: 600; cursor: pointer; color: var(--muted-dark); white-space: nowrap; }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.stat-card .stat-value { font-family: 'Barlow Condensed', sans-serif; font-size: 1.7rem; font-weight: 800; color: var(--accent); }
+.stat-card .stat-label { font-size: 0.7rem; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.03em; }
+table.stat-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+table.stat-table th, table.stat-table td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--border-soft); }
+table.stat-table th { color: var(--muted); font-weight: 600; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.02em; }
+table.stat-table tr:last-child td { border-bottom: none; }
+.settings-row { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.file-input-label { display: block; padding: 13px; border-radius: 8px; border: 1px dashed var(--border); text-align: center; font-size: 0.9rem; color: var(--muted-dark); cursor: pointer; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(36,33,28,0.55); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 30; }
+.modal-box { background: var(--card); border-radius: 10px; padding: 20px; width: 100%; max-width: 380px; max-height: 88vh; overflow-y: auto; }
+.modal-box .field-label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); margin-top: 12px; margin-bottom: 5px; }
+.modal-box input[type=text], .modal-box input[type=number], .modal-box select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 7px; background: #fff; color: var(--ink); outline: none; }
+.truck-select-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; max-height: 300px; overflow-y: auto; }
+.truck-select-list button { padding: 10px 12px; border-radius: 7px; border: 1px solid var(--border); background: #fff; text-align: left; font-weight: 600; cursor: pointer; }
+.truck-select-list button.current { border-color: var(--accent); background: #D9720B14; }
+.truck-select-list button.unassign { color: var(--danger); border-color: var(--danger); }
+.modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+.modal-actions button { flex: 1; padding: 10px; border-radius: 7px; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
+.btn-cancel { background: none; border: 1px solid var(--border); color: var(--muted-dark); }
+.btn-danger { background: var(--danger); border: none; color: #fff; }
+footer.credit { text-align: center; font-size: 0.68rem; color: #B0AA98; padding: 10px 0 20px; letter-spacing: 0.02em; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ===== Dyad Stone Transport — Distribuție Flotă =====
+// Versiune fără server: datele se salvează local, pe acest telefon/browser.
+// made by Razvan Popa
+
+const TRUCK_NUMS = [105, 106, 107, 131, 133, 134, 141, 142, 143, 144, 145, 146, 147, 148, 93];
+const TRUCKS = TRUCK_NUMS.map((n) => `B${n}DYD`);
+const DEFAULT_CAPACITY = 40;
+const PRODUCTS = ["Balast", "Nisip", "Sort 0-4", "Sort 4-8", "Sort 8-16", "Sort 16-32", "Piatră spartă"];
+const STATUS = {
+  asteptare: { label: "Așteptare", color: "#8A8578" },
+  cursa: { label: "În cursă", color: "#D9720B" },
+  finalizat: { label: "Finalizat", color: "#3E7A4C" },
+};
+const UNASSIGNED = { label: "Neasignat · așteaptă camion liber", color: "#B23B2E" };
+const STATUS_ORDER = ["asteptare", "cursa", "finalizat"];
+
+const STORAGE_KEY = "dyad-stone-fleet-data";
+const UNAVAILABLE_KEY = "dyad-stone-fleet-unavailable";
+const CAPACITY_KEY = "dyad-stone-fleet-capacities";
+const QUEUE_KEY = "dyad-stone-fleet-queue";
+
+let orders = loadFromStorage();
+let unavailableTrucks = loadUnavailable();  // [{truck, reason, since}]
+let truckCapacities = loadCapacities();     // {truck: number}
+let queuePriority = loadQueue();            // [tripId, ...] manual priority order
+
+let tab = "comanda";
+let confirmDeleteId = null;
+let formError = "";
+let editOrderId = null;
+let addTonsOrderId = null;
+let reassignTarget = null;   // {orderId, tripId}
+let unavailModalTruck = null;
+let flotaFilter = "toate";   // toate | libere | indisponibile
+let searchDistributie = "";
+let searchIstoric = "";
+let importError = "";
+let importSuccess = "";
+
+const app = document.getElementById("app");
+
+// ---------- storage ----------
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function persist() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+  } catch {
+    formError = "Nu am putut salva local pe acest telefon (spațiu de stocare plin?).";
+  }
+}
+
+function loadUnavailable() {
+  try {
+    const raw = localStorage.getItem(UNAVAILABLE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return parsed.map((item) => (typeof item === "string" ? { truck: item, reason: "", since: null } : item));
+  } catch {
+    return [];
+  }
+}
+
+function persistUnavailable() {
+  try { localStorage.setItem(UNAVAILABLE_KEY, JSON.stringify(unavailableTrucks)); } catch {}
+}
+
+function loadCapacities() {
+  try {
+    const raw = localStorage.getItem(CAPACITY_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+function persistCapacities() {
+  try { localStorage.setItem(CAPACITY_KEY, JSON.stringify(truckCapacities)); } catch {}
+}
+function getCapacity(t) { return truckCapacities[t] && truckCapacities[t] > 0 ? truckCapacities[t] : DEFAULT_CAPACITY; }
+function setCapacity(t, val) {
+  const n = parseFloat(val);
+  if (n > 0) truckCapacities[t] = n; else delete truckCapacities[t];
+  persistCapacities();
+}
+
+function loadQueue() {
+  try {
+    const raw = localStorage.getItem(QUEUE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+function persistQueue() {
+  try { localStorage.setItem(QUEUE_KEY, JSON.stringify(queuePriority)); } catch {}
+}
+
+function isUnavailable(truck) { return unavailableTrucks.some((u) => u.truck === truck); }
+function getUnavailableInfo(truck) { return unavailableTrucks.find((u) => u.truck === truck); }
+
+function markUnavailable(truck, reason) {
+  unavailableTrucks = unavailableTrucks.filter((u) => u.truck !== truck);
+  unavailableTrucks.push({ truck, reason: reason || "", since: Date.now() });
+  persistUnavailable();
+  render();
+}
+function markAvailable(truck) {
+  unavailableTrucks = unavailableTrucks.filter((u) => u.truck !== truck);
+  persistUnavailable();
+  reassignQueued();
+  render();
+}
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function loadTons(total) {
+  const loads = [];
+  let remaining = total;
+  while (remaining > 0) {
+    const l = Math.min(DEFAULT_CAPACITY, remaining);
+    loads.push(Math.round(l * 100) / 100);
+    remaining -= l;
+  }
+  return loads;
+}
+
+function shuffledTrucks(source) {
+  const arr = [...source];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Un camion e "liber" dacă nu are nicio cursă activă (necofirmată ca finalizată).
+function busyTrucks() {
+  const busy = new Set();
+  orders.forEach((o) => o.trips.forEach((tr) => {
+    if (tr.truck && tr.status !== "finalizat") busy.add(tr.truck);
+  }));
+  return busy;
+}
+
+function availableTrucks() {
+  const busy = busyTrucks();
+  return TRUCKS.filter((t) => !busy.has(t) && !isUnavailable(t));
+}
+
+function allUnassignedTripIds() {
+  const ids = [];
+  orders.slice().sort((a, b) => a.createdAt - b.createdAt).forEach((o) => {
+    o.trips.forEach((tr) => { if (!tr.truck) ids.push(tr.id); });
+  });
+  return ids;
+}
+
+// Menține lista de priorități manuale sincronizată cu cursele neasignate reale:
+// scoate id-uri care nu mai sunt neasignate/nu mai există, adaugă la coadă cele noi.
+function syncQueuePriority() {
+  const current = allUnassignedTripIds();
+  const currentSet = new Set(current);
+  queuePriority = queuePriority.filter((id) => currentSet.has(id));
+  current.forEach((id) => { if (!queuePriority.includes(id)) queuePriority.push(id); });
+  persistQueue();
+}
+
+function findOrderTrip(tripId) {
+  for (const o of orders) {
+    const tr = o.trips.find((t) => t.id === tripId);
+    if (tr) return { order: o, trip: tr };
+  }
+  return null;
+}
+
+// Curse asignate aleatoriu, dar niciodată o a doua cursă pe un camion
+// care are deja o cursă neconfirmată. Dacă nu sunt destule camioane libere,
+// cursele rămase intră în coada de așteptare până se eliberează un camion.
+function distribute(loads) {
+  const pool = shuffledTrucks(availableTrucks());
+  const assignments = [];
+  let idx = 0;
+  const now = Date.now();
+  for (const tons of loads) {
+    if (idx < pool.length) {
+      assignments.push({ truck: pool[idx], tons, assignedAt: now });
+      idx++;
+    } else {
+      assignments.push({ truck: null, tons, assignedAt: null });
+    }
+  }
+  return assignments;
+}
+
+// Când un camion se eliberează, prima cursă din coada de așteptare (ordine
+// manuală, implicit ordinea creării) primește automat un camion liber ales aleatoriu.
+function reassignQueued() {
+  syncQueuePriority();
+  const pool = shuffledTrucks(availableTrucks());
+  if (pool.length === 0) { persist(); return; }
+  let idx = 0;
+  for (const tripId of queuePriority) {
+    if (idx >= pool.length) break;
+    const found = findOrderTrip(tripId);
+    if (!found || found.trip.truck) continue;
+    found.trip.truck = pool[idx];
+    found.trip.assignedAt = Date.now();
+    idx++;
+  }
+  persist();
+  syncQueuePriority();
+}
+
+function createOrder(client, tons, product, note) {
+  const loads = loadTons(tons);
+  const assignments = distribute(loads);
+  const order = {
+    id: uid(),
+    client, product, note: note || "", tons,
+    createdAt: Date.now(),
+    trips: assignments.map((a) => ({ id: uid(), truck: a.truck, tons: a.tons, status: "asteptare", assignedAt: a.assignedAt, finishedAt: null })),
+  };
+  orders = [order, ...orders];
+  persist();
+  syncQueuePriority();
+}
+
+function addExtraTons(orderId, extra) {
+  const order = orders.find((o) => o.id === orderId);
+  if (!order || !(extra > 0)) return;
+  const loads = loadTons(extra);
+  const assignments = distribute(loads);
+  const newTrips = assignments.map((a) => ({ id: uid(), truck: a.truck, tons: a.tons, status: "asteptare", assignedAt: a.assignedAt, finishedAt: null }));
+  order.trips = [...order.trips, ...newTrips];
+  order.tons = Math.round((order.tons + extra) * 100) / 100;
+  persist();
+  syncQueuePriority();
+}
+
+function updateOrderMeta(orderId, { client, product, note }) {
+  const order = orders.find((o) => o.id === orderId);
+  if (!order) return;
+  if (client != null) order.client = client;
+  if (product != null) order.product = product;
+  if (note != null) order.note = note;
+  persist();
+}
+
+function setTripStatus(orderId, tripId, status) {
+  const order = orders.find((o) => o.id === orderId);
+  if (!order) return;
+  const trip = order.trips.find((t) => t.id === tripId);
+  if (!trip) return;
+  trip.status = status;
+  trip.finishedAt = status === "finalizat" ? Date.now() : null;
+  persist();
+  if (status === "finalizat") reassignQueued();
+}
+
+function reassignTripTruck(orderId, tripId, newTruck) {
+  const order = orders.find((o) => o.id === orderId);
+  if (!order) return;
+  const trip = order.trips.find((t) => t.id === tripId);
+  if (!trip) return;
+  const oldTruck = trip.truck;
+  if (newTruck === oldTruck) return;
+  trip.truck = newTruck || null;
+  if (newTruck) {
+    trip.assignedAt = Date.now();
+  } else {
+    trip.assignedAt = null;
+    trip.status = "asteptare";
+    trip.finishedAt = null;
+  }
+  persist();
+  syncQueuePriority();
+  if (oldTruck) reassignQueued();
+}
+
+function deleteOrder(orderId) {
+  orders = orders.filter((o) => o.id !== orderId);
+  persist();
+  syncQueuePriority();
+  reassignQueued();
+  confirmDeleteId = null;
+  render();
+}
+
+function moveQueueItem(tripId, dir) {
+  const idx = queuePriority.indexOf(tripId);
+  if (idx < 0) return;
+  const swapWith = idx + dir;
+  if (swapWith < 0 || swapWith >= queuePriority.length) return;
+  [queuePriority[idx], queuePriority[swapWith]] = [queuePriority[swapWith], queuePriority[idx]];
+  persistQueue();
+  render();
+}
+
+function formatDate(ts) {
+  if (!ts) return "";
+  const d = new Date(ts);
+  return d.toLocaleDateString("ro-RO", { day: "2-digit", month: "2-digit" }) + " " + d.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" });
+}
+
+function formatDuration(ms) {
+  const totalMin = Math.round(ms / 60000);
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
+
+function render() {
+  app.innerHTML = `
+    <header class="app-header">
+      <div class="header-row">
+        <div class="logo-box">${truckIcon("#24211C", 22)}</div>
+        <div>
+          <div class="brand-title display">DYAD STONE TRANSPORT</div>
+          <div class="brand-sub">Distribuție flotă · Sorturi agregate minerale &amp; balast · ${TRUCKS.length} camioane</div>
+        </div>
+      </div>
+    </header>
+    <nav class="tabs">
+      ${tabBtn("comanda", "Comandă")}
+      ${tabBtn("distributie", "Curse")}
+      ${tabBtn("flota", "Flotă")}
+      ${tabBtn("istoric", "Istoric")}
+      ${tabBtn("statistici", "Stats")}
+      ${tabBtn("setari", "Setări")}
+    </nav>
+    <main>${renderTab()}</main>
+    ${confirmDeleteId ? renderModal() : ""}
+    ${editOrderId ? renderEditOrderModal() : ""}
+    ${addTonsOrderId ? renderAddTonsModal() : ""}
+    ${reassignTarget ? renderReassignModal() : ""}
+    ${unavailModalTruck ? renderUnavailModal() : ""}
+    <footer class="credit">made by Razvan Popa</footer>
+  `;
+  attachHandlers();
+}
+
+function tabBtn(id, label) {
+  return `<button data-tab="${id}" class="${tab === id ? "active" : ""}">${label}</button>`;
+}
+
+function truckIcon(color, size) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5v8h1"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="17.5" cy="17.5" r="1.5"/></svg>`;
+}
+
+function renderTab() {
+  if (tab === "comanda") return renderComanda();
+  if (tab === "distributie") return renderDistributie();
+  if (tab === "flota") return renderFlota();
+  if (tab === "istoric") return renderIstoric();
+  if (tab === "statistici") return renderStats();
+  if (tab === "setari") return renderSetari();
+}
+
+function renderComanda() {
+  return `
+    <h2 class="section-title display">COMANDĂ NOUĂ</h2>
+    <form id="order-form" class="card">
+      <div class="field"><label>Client</label><input id="f-client" placeholder="Nume client / șantier" /></div>
+      <div class="grid-2">
+        <div class="field"><label>Cantitate (tone)</label><input id="f-tons" type="number" inputmode="decimal" min="0" step="0.5" placeholder="ex: 150" /></div>
+        <div class="field"><label>Produs</label><select id="f-product">${PRODUCTS.map((p) => `<option value="${p}">${p}</option>`).join("")}</select></div>
+      </div>
+      <div class="field"><label>Notă (opțional)</label><input id="f-note" placeholder="Adresă livrare, interval orar..." /></div>
+      <div id="hint-box"></div>
+      ${formError ? `<div class="error-box">⚠ ${formError}</div>` : ""}
+      <button type="submit" class="btn-primary">DISTRIBUIE COMANDA</button>
+    </form>
+  `;
+}
+
+function renderDistributie() {
+  syncQueuePriority();
+  const queueItems = queuePriority.map((id) => findOrderTrip(id)).filter(Boolean);
+  const activeOrders = orders.filter((o) => (o.trips || []).some((t) => t.status !== "finalizat"));
+  const filtered = filterOrdersByClient(activeOrders, searchDistributie);
+  return `
+    <h2 class="section-title display">CURSE ACTIVE</h2>
+    <div class="search-box"><input id="search-distributie" placeholder="Caută după client..." value="${escapeHtml(searchDistributie)}" /></div>
+    ${queueItems.length ? `
+      <div class="queue-section">
+        <h3>COADĂ DE AȘTEPTARE MANUALĂ (${queueItems.length})</h3>
+        ${queueItems.map((q, i) => `
+          <div class="queue-item">
+            <div class="queue-item-info">
+              <div class="q-client">${escapeHtml(q.order.client)}</div>
+              <div class="q-meta">${q.trip.tons} t · ${escapeHtml(q.order.product)}</div>
+            </div>
+            <div class="queue-arrows">
+              <button data-queue-up="${q.trip.id}" ${i === 0 ? "disabled" : ""} title="Prioritate mai mare">▲</button>
+              <button data-queue-down="${q.trip.id}" ${i === queueItems.length - 1 ? "disabled" : ""} title="Prioritate mai mică">▼</button>
+              <button class="btn-small" data-reassign-open="${q.order.id}:${q.trip.id}">Atribuie</button>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    ` : ""}
+    <div id="distributie-list">${renderDistributieList(filtered)}</div>
+  `;
+}
+
+function filterOrdersByClient(list, term) {
+  const t = term.trim().toLowerCase();
+  if (!t) return list;
+  return list.filter((o) => o.client.toLowerCase().includes(t));
+}
+
+function renderDistributieList(list) {
+  if (!list.length) return emptyState("Nicio comandă activă găsită.");
+  return list.map((o) => orderCard(o, false)).join("");
+}
+
+function renderIstoric() {
+  const finished = orders.filter((o) => (o.trips || []).every((t) => t.status === "finalizat") && o.trips.length > 0);
+  const filtered = filterOrdersByClient(finished, searchIstoric);
+  return `
+    <h2 class="section-title display">ISTORIC COMENZI FINALIZATE</h2>
+    <div class="search-box"><input id="search-istoric" placeholder="Caută după client..." value="${escapeHtml(searchIstoric)}" /></div>
+    ${finished.length ? `<button class="btn-small" id="export-csv" style="margin-bottom:14px">⬇ Exportă CSV</button>` : ""}
+    <div id="istoric-list">${renderIstoricList(filtered)}</div>
+  `;
+}
+
+function renderIstoricList(list) {
+  if (!list.length) return emptyState("Nicio comandă finalizată găsită.");
+  return list.map((o) => orderCard(o, true)).join("");
+}
+
+function renderFlota() {
+  const queues = {};
+  TRUCKS.forEach((t) => (queues[t] = []));
+  orders.forEach((o) => (o.trips || []).forEach((tr) => { if (tr.truck) queues[tr.truck].push({ ...tr, client: o.client }); }));
+
+  let list = TRUCKS.slice();
+  if (flotaFilter === "libere") list = list.filter((t) => !isUnavailable(t) && queues[t].filter((x) => x.status !== "finalizat").length === 0);
+  else if (flotaFilter === "indisponibile") list = list.filter((t) => isUnavailable(t));
+
+  return `
+    <h2 class="section-title display">STARE FLOTĂ</h2>
+    <div class="flota-filters">
+      <button data-flota-filter="toate" class="${flotaFilter === "toate" ? "active" : ""}">Toate</button>
+      <button data-flota-filter="libere" class="${flotaFilter === "libere" ? "active" : ""}">Libere</button>
+      <button data-flota-filter="indisponibile" class="${flotaFilter === "indisponibile" ? "active" : ""}">Indisponibile</button>
+    </div>
+    ${list.length === 0 ? emptyState("Niciun camion în această categorie.") : list.map((truck) => {
+      const queue = queues[truck];
+      const active = queue.filter((t) => t.status !== "finalizat");
+      const done = queue.filter((t) => t.status === "finalizat").length;
+      const activeTons = active.reduce((s, t) => s + t.tons, 0);
+      const unavail = isUnavailable(truck);
+      const info = getUnavailableInfo(truck);
+      const cap = getCapacity(truck);
+      return `
+        <div class="truck-card" style="${unavail ? "opacity:0.6" : ""}">
+          <div class="truck-card-top">
+            <div class="truck-plate">${truckIcon(unavail ? "#8A8578" : "#D9720B", 16)} ${truck}</div>
+            <div class="truck-queue-info">${active.length} în așteptare/cursă · ${done} finalizate</div>
+          </div>
+          <div class="strip">
+            ${active.length === 0 ? "" : active.map((t) => `<div title="${escapeHtml(t.client)} · ${t.tons}t" style="width:${Math.max(6, (t.tons / cap) * 100)}%;background:${STATUS[t.status].color}"></div>`).join("")}
+          </div>
+          <div class="truck-active-tons" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">
+            <span>${activeTons.toFixed(1)} t în curs</span>
+            <button data-toggle-avail="${truck}" class="status-pill"
+              style="background:${unavail ? "#3E7A4C1A" : "#B23B2E1A"};color:${unavail ? "#3E7A4C" : "#B23B2E"}">
+              ${unavail ? "Marchează disponibil" : "Marchează indisponibil"}
+            </button>
+          </div>
+          ${unavail && info && info.reason ? `<div class="reason-tag">Motiv: ${escapeHtml(info.reason)}</div>` : ""}
+          <div class="capacity-row">
+            <span>Capacitate:</span>
+            <input type="number" min="1" step="1" value="${cap}" data-capacity="${truck}" />
+            <span>t / cursă</span>
+          </div>
+        </div>
+      `;
+    }).join("")}
+  `;
+}
+
+function renderStats() {
+  const now = new Date();
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const startWeek = startToday - 6 * 24 * 60 * 60 * 1000;
+
+  let tonsToday = 0, tonsWeek = 0, finishedToday = 0;
+  const perTruck = {};
+  TRUCKS.forEach((t) => (perTruck[t] = { trips: 0, tons: 0, durations: [] }));
+
+  orders.forEach((o) => o.trips.forEach((tr) => {
+    if (tr.status === "finalizat" && tr.finishedAt) {
+      if (tr.finishedAt >= startToday) { tonsToday += tr.tons; finishedToday++; }
+      if (tr.finishedAt >= startWeek) tonsWeek += tr.tons;
+      if (tr.truck) {
+        perTruck[tr.truck].trips++;
+        perTruck[tr.truck].tons += tr.tons;
+        if (tr.assignedAt) perTruck[tr.truck].durations.push(tr.finishedAt - tr.assignedAt);
+      }
+    }
+  }));
+
+  const rows = TRUCKS.filter((t) => perTruck[t].trips > 0).sort((a, b) => perTruck[b].tons - perTruck[a].tons);
+
+  return `
+    <h2 class="section-title display">STATISTICI</h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-value">${tonsToday.toFixed(1)}</div><div class="stat-label">Tone azi</div></div>
+      <div class="stat-card"><div class="stat-value">${finishedToday}</div><div class="stat-label">Curse finalizate azi</div></div>
+      <div class="stat-card"><div class="stat-value">${tonsWeek.toFixed(1)}</div><div class="stat-label">Tone ultimele 7 zile</div></div>
+      <div class="stat-card"><div class="stat-value">${TRUCKS.length - unavailableTrucks.length}</div><div class="stat-label">Camioane disponibile</div></div>
+    </div>
+    ${rows.length ? `
+      <table class="stat-table">
+        <thead><tr><th>Camion</th><th>Curse</th><th>Tone</th><th>Durată medie</th></tr></thead>
+        <tbody>
+          ${rows.map((t) => {
+            const p = perTruck[t];
+            const avgMs = p.durations.length ? p.durations.reduce((a, b) => a + b, 0) / p.durations.length : null;
+            return `<tr><td>${t}</td><td>${p.trips}</td><td>${p.tons.toFixed(1)} t</td><td>${avgMs ? formatDuration(avgMs) : "—"}</td></tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+    ` : emptyState("Nu există încă curse finalizate pentru statistici.")}
+  `;
+}
+
+function renderSetari() {
+  return `
+    <h2 class="section-title display">SETĂRI</h2>
+    <div class="card">
+      <p style="font-weight:600;margin-bottom:8px">Backup date</p>
+      <p style="font-size:0.85rem;color:var(--muted-dark);margin-bottom:12px">Datele sunt salvate doar local, pe acest telefon. Fă un export periodic ca să nu le pierzi dacă schimbi telefonul sau ștergi browserul.</p>
+      <div class="settings-row">
+        <button class="btn-primary" id="export-backup" style="font-size:1rem">⬇ Exportă backup (JSON)</button>
+        <label class="file-input-label" for="import-file">⬆ Importă backup (JSON)</label>
+        <input type="file" id="import-file" accept="application/json" style="display:none" />
+      </div>
+      ${importError ? `<div class="error-box" style="margin-top:12px">⚠ ${importError}</div>` : ""}
+      ${importSuccess ? `<div class="hint-box" style="margin-top:12px;margin-bottom:0">${importSuccess}</div>` : ""}
+    </div>
+  `;
+}
+
+function emptyState(text) { return `<div class="empty-state">${text}</div>`; }
+
+function orderCard(order, readOnly) {
+  const done = (order.trips || []).filter((t) => t.status === "finalizat").length;
+  return `
+    <div class="order-card">
+      <div class="order-head">
+        <div>
+          <div class="order-client">${escapeHtml(order.client)}</div>
+          <div class="order-meta">${order.product} · ${order.tons} t · ${done}/${order.trips.length} curse finalizate${order.note ? " · " + escapeHtml(order.note) : ""}</div>
+          <div class="order-meta">Creat: ${formatDate(order.createdAt)}</div>
+        </div>
+        ${!readOnly ? `
+          <div style="display:flex;gap:2px;flex-shrink:0">
+            <button class="icon-btn neutral" data-add-tons="${order.id}" title="Adaugă tone">➕</button>
+            <button class="icon-btn neutral" data-edit-order="${order.id}" title="Editează">✎</button>
+            <button class="icon-btn" data-delete="${order.id}" title="Șterge">🗑</button>
+          </div>
+        ` : ""}
+      </div>
+      ${order.trips.map((tr) => tr.truck ? `
+        <div class="trip-row">
+          <div class="trip-left">${truckIcon("#8A8578", 14)}<span class="trip-truck">${tr.truck}</span><span class="trip-tons">${tr.tons} t</span></div>
+          <div style="display:flex;align-items:center;gap:6px">
+            ${!readOnly && tr.status !== "finalizat" ? `<button class="btn-small" data-reassign-open="${order.id}:${tr.id}">⇄</button>` : ""}
+            ${readOnly
+              ? `<span style="color:${STATUS[tr.status].color};font-size:0.72rem;font-weight:600">${STATUS[tr.status].label}</span>`
+              : `<button class="status-pill" data-status-order="${order.id}" data-status-trip="${tr.id}" data-status-current="${tr.status}" style="background:${STATUS[tr.status].color}1A;color:${STATUS[tr.status].color}">${STATUS[tr.status].label} ›</button>`}
+          </div>
+        </div>
+      ` : `
+        <div class="trip-row">
+          <div class="trip-left">${truckIcon("#B23B2E", 14)}<span class="trip-tons">${tr.tons} t</span></div>
+          ${!readOnly
+            ? `<button class="btn-small" data-reassign-open="${order.id}:${tr.id}">Atribuie camion</button>`
+            : `<span style="color:${UNASSIGNED.color};font-size:0.72rem;font-weight:600">${UNASSIGNED.label}</span>`}
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderModal() {
+  return `
+    <div class="modal-overlay" id="modal-overlay">
+      <div class="modal-box">
+        <p>Ștergi definitiv această comandă și toate cursele asociate?</p>
+        <div class="modal-actions">
+          <button class="btn-cancel" id="modal-cancel">Anulează</button>
+          <button class="btn-danger" id="modal-confirm">Șterge</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderEditOrderModal() {
+  const order = orders.find((o) => o.id === editOrderId);
+  if (!order) return "";
+  return `
+    <div class="modal-overlay" id="edit-overlay">
+      <div class="modal-box">
+        <p style="font-weight:700">Editează comanda</p>
+        <label class="field-label">Client</label>
+        <input type="text" id="edit-client" value="${escapeHtml(order.client)}" />
+        <label class="field-label">Produs</label>
+        <select id="edit-product">${PRODUCTS.map((p) => `<option value="${p}" ${p === order.product ? "selected" : ""}>${p}</option>`).join("")}</select>
+        <label class="field-label">Notă</label>
+        <input type="text" id="edit-note" value="${escapeHtml(order.note || "")}" />
+        <div class="modal-actions">
+          <button class="btn-cancel" id="edit-cancel">Anulează</button>
+          <button class="btn-danger" style="background:var(--accent);color:var(--ink)" id="edit-save">Salvează</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderAddTonsModal() {
+  const order = orders.find((o) => o.id === addTonsOrderId);
+  if (!order) return "";
+  return `
+    <div class="modal-overlay" id="addtons-overlay">
+      <div class="modal-box">
+        <p style="font-weight:700">Adaugă tone — ${escapeHtml(order.client)}</p>
+        <label class="field-label">Cantitate suplimentară (tone)</label>
+        <input type="number" min="0.5" step="0.5" id="addtons-value" placeholder="ex: 40" />
+        <div class="modal-actions">
+          <button class="btn-cancel" id="addtons-cancel">Anulează</button>
+          <button class="btn-danger" style="background:var(--accent);color:var(--ink)" id="addtons-save">Adaugă</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderReassignModal() {
+  if (!reassignTarget) return "";
+  const found = findOrderTrip(reassignTarget.tripId);
+  if (!found) return "";
+  const { order, trip } = found;
+  const options = availableTrucks();
+  return `
+    <div class="modal-overlay" id="reassign-overlay">
+      <div class="modal-box">
+        <p style="font-weight:700">Atribuie camion — ${escapeHtml(order.client)} · ${trip.tons} t</p>
+        <div class="truck-select-list">
+          ${trip.truck ? `<button class="current" data-reassign-pick="${trip.truck}">${trip.truck} (actual)</button>` : ""}
+          ${options.map((t) => `<button data-reassign-pick="${t}">${t}</button>`).join("") || `<p style="font-size:0.85rem;color:var(--muted);padding:6px 0">Niciun camion liber momentan.</p>`}
+          ${trip.truck ? `<button class="unassign" data-reassign-pick="">Neasignat (eliberează camionul)</button>` : ""}
+        </div>
+        <div class="modal-actions">
+          <button class="btn-cancel" id="reassign-cancel">Închide</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderUnavailModal() {
+  return `
+    <div class="modal-overlay" id="unavail-overlay">
+      <div class="modal-box">
+        <p style="font-weight:700">Marchează ${unavailModalTruck} indisponibil</p>
+        <label class="field-label">Motiv (opțional)</label>
+        <input type="text" id="unavail-reason" placeholder="ex: revizie, ITP, concediu șofer" />
+        <div class="modal-actions">
+          <button class="btn-cancel" id="unavail-cancel">Anulează</button>
+          <button class="btn-danger" id="unavail-save">Confirmă</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(str) {
+  const d = document.createElement("div");
+  d.textContent = str || "";
+  return d.innerHTML;
+}
+
+function exportCSV() {
+  const finished = orders.filter((o) => (o.trips || []).every((t) => t.status === "finalizat") && o.trips.length > 0);
+  const rows = [["Client", "Produs", "Tone comandă", "Camion", "Tone cursă", "Creat", "Finalizat"]];
+  finished.forEach((o) => {
+    o.trips.forEach((tr) => {
+      rows.push([o.client, o.product, o.tons, tr.truck || "", tr.tons, formatDate(o.createdAt), formatDate(tr.finishedAt)]);
+    });
+  });
+  const csv = rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
+  downloadBlob(csv, "text/csv;charset=utf-8;", `dyad-stone-istoric-${new Date().toISOString().slice(0, 10)}.csv`);
+}
+
+function exportBackup() {
+  const data = { orders, unavailableTrucks, truckCapacities, queuePriority, exportedAt: Date.now() };
+  downloadBlob(JSON.stringify(data, null, 2), "application/json", `dyad-stone-backup-${new Date().toISOString().slice(0, 10)}.json`);
+}
+
+function downloadBlob(content, type, filename) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function handleImportFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (!Array.isArray(data.orders)) throw new Error("format invalid");
+      orders = data.orders;
+      unavailableTrucks = Array.isArray(data.unavailableTrucks) ? data.unavailableTrucks : [];
+      truckCapacities = data.truckCapacities && typeof data.truckCapacities === "object" ? data.truckCapacities : {};
+      queuePriority = Array.isArray(data.queuePriority) ? data.queuePriority : [];
+      persist(); persistUnavailable(); persistCapacities(); persistQueue();
+      importError = "";
+      importSuccess = "Backup importat cu succes.";
+    } catch {
+      importError = "Fișierul nu este un backup valid.";
+      importSuccess = "";
+    }
+    render();
+  };
+  reader.readAsText(file);
+}
+
+function attachHandlers() {
+  document.querySelectorAll("[data-tab]").forEach((btn) => {
+    btn.addEventListener("click", () => { tab = btn.dataset.tab; formError = ""; importError = ""; importSuccess = ""; render(); });
+  });
+
+  const form = document.getElementById("order-form");
+  if (form) {
+    const tonsInput = document.getElementById("f-tons");
+    const hintBox = document.getElementById("hint-box");
+    tonsInput.addEventListener("input", () => {
+      const t = parseFloat(tonsInput.value);
+      if (t > 0) {
+        const nLoads = loadTons(t).length;
+        const nFree = availableTrucks().length;
+        const queued = Math.max(0, nLoads - nFree);
+        hintBox.innerHTML = `<div class="hint-box">Se vor genera <strong>${nLoads}</strong> curse (max ${DEFAULT_CAPACITY} t/cursă), distribuite <strong>aleatoriu</strong> pe camioane libere.` +
+          (queued > 0 ? ` Momentan sunt <strong>${nFree}</strong> camioane libere — <strong>${queued}</strong> curse vor aștepta să se elibereze un camion.` : ` Toate au camion liber disponibil.`) +
+          `</div>`;
+      } else {
+        hintBox.innerHTML = "";
+      }
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      formError = "";
+      const client = document.getElementById("f-client").value.trim();
+      const tons = parseFloat(document.getElementById("f-tons").value);
+      const product = document.getElementById("f-product").value;
+      const note = document.getElementById("f-note").value.trim();
+      if (!client) { formError = "Introdu numele clientului."; render(); return; }
+      if (!tons || tons <= 0) { formError = "Introdu o cantitate validă în tone."; render(); return; }
+      createOrder(client, tons, product, note);
+      tab = "distributie";
+      render();
+    });
+  }
+
+  const searchDistInput = document.getElementById("search-distributie");
+  if (searchDistInput) {
+    searchDistInput.addEventListener("input", () => {
+      searchDistributie = searchDistInput.value;
+      const activeOrders = orders.filter((o) => (o.trips || []).some((t) => t.status !== "finalizat"));
+      const filtered = filterOrdersByClient(activeOrders, searchDistributie);
+      const listEl = document.getElementById("distributie-list");
+      if (listEl) { listEl.innerHTML = renderDistributieList(filtered); attachListHandlers(listEl); }
+    });
+  }
+
+  const searchIstInput = document.getElementById("search-istoric");
+  if (searchIstInput) {
+    searchIstInput.addEventListener("input", () => {
+      searchIstoric = searchIstInput.value;
+      const finished = orders.filter((o) => (o.trips || []).every((t) => t.status === "finalizat") && o.trips.length > 0);
+      const filtered = filterOrdersByClient(finished, searchIstoric);
+      const listEl = document.getElementById("istoric-list");
+      if (listEl) { listEl.innerHTML = renderIstoricList(filtered); attachListHandlers(listEl); }
+    });
+  }
+
+  attachListHandlers(document);
+
+  document.querySelectorAll("[data-queue-up]").forEach((btn) => btn.addEventListener("click", () => moveQueueItem(btn.dataset.queueUp, -1)));
+  document.querySelectorAll("[data-queue-down]").forEach((btn) => btn.addEventListener("click", () => moveQueueItem(btn.dataset.queueDown, 1)));
+
+  document.querySelectorAll("[data-flota-filter]").forEach((btn) => {
+    btn.addEventListener("click", () => { flotaFilter = btn.dataset.flotaFilter; render(); });
+  });
+
+  document.querySelectorAll("[data-capacity]").forEach((inp) => {
+    inp.addEventListener("change", () => { setCapacity(inp.dataset.capacity, inp.value); render(); });
+  });
+
+  document.querySelectorAll("[data-toggle-avail]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const truck = btn.dataset.toggleAvail;
+      if (isUnavailable(truck)) markAvailable(truck);
+      else { unavailModalTruck = truck; render(); }
+    });
+  });
+
+  const unavailOverlay = document.getElementById("unavail-overlay");
+  if (unavailOverlay) {
+    document.getElementById("unavail-cancel").addEventListener("click", () => { unavailModalTruck = null; render(); });
+    document.getElementById("unavail-save").addEventListener("click", () => {
+      const reason = document.getElementById("unavail-reason").value.trim();
+      const truck = unavailModalTruck;
+      unavailModalTruck = null;
+      markUnavailable(truck, reason);
+    });
+  }
+
+  const overlay = document.getElementById("modal-overlay");
+  if (overlay) {
+    document.getElementById("modal-cancel").addEventListener("click", () => { confirmDeleteId = null; render(); });
+    document.getElementById("modal-confirm").addEventListener("click", () => { deleteOrder(confirmDeleteId); });
+  }
+
+  const editOverlay = document.getElementById("edit-overlay");
+  if (editOverlay) {
+    document.getElementById("edit-cancel").addEventListener("click", () => { editOrderId = null; render(); });
+    document.getElementById("edit-save").addEventListener("click", () => {
+      const client = document.getElementById("edit-client").value.trim();
+      const product = document.getElementById("edit-product").value;
+      const note = document.getElementById("edit-note").value.trim();
+      if (!client) return;
+      updateOrderMeta(editOrderId, { client, product, note });
+      editOrderId = null;
+      render();
+    });
+  }
+
+  const addTonsOverlay = document.getElementById("addtons-overlay");
+  if (addTonsOverlay) {
+    document.getElementById("addtons-cancel").addEventListener("click", () => { addTonsOrderId = null; render(); });
+    document.getElementById("addtons-save").addEventListener("click", () => {
+      const val = parseFloat(document.getElementById("addtons-value").value);
+      if (val > 0) addExtraTons(addTonsOrderId, val);
+      addTonsOrderId = null;
+      render();
+    });
+  }
+
+  const reassignOverlay = document.getElementById("reassign-overlay");
+  if (reassignOverlay) {
+    document.getElementById("reassign-cancel").addEventListener("click", () => { reassignTarget = null; render(); });
+    document.querySelectorAll("[data-reassign-pick]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const truck = btn.dataset.reassignPick;
+        const { orderId, tripId } = reassignTarget;
+        reassignTarget = null;
+        reassignTripTruck(orderId, tripId, truck || null);
+        render();
+      });
+    });
+  }
+
+  const exportCsvBtn = document.getElementById("export-csv");
+  if (exportCsvBtn) exportCsvBtn.addEventListener("click", exportCSV);
+
+  const exportBackupBtn = document.getElementById("export-backup");
+  if (exportBackupBtn) exportBackupBtn.addEventListener("click", exportBackup);
+
+  const importFile = document.getElementById("import-file");
+  if (importFile) importFile.addEventListener("change", handleImportFile);
+}
+
+function attachListHandlers(root) {
+  root.querySelectorAll("[data-delete]").forEach((btn) => {
+    btn.addEventListener("click", () => { confirmDeleteId = btn.dataset.delete; render(); });
+  });
+  root.querySelectorAll("[data-edit-order]").forEach((btn) => {
+    btn.addEventListener("click", () => { editOrderId = btn.dataset.editOrder; render(); });
+  });
+  root.querySelectorAll("[data-add-tons]").forEach((btn) => {
+    btn.addEventListener("click", () => { addTonsOrderId = btn.dataset.addTons; render(); });
+  });
+  root.querySelectorAll("[data-reassign-open]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const [orderId, tripId] = btn.dataset.reassignOpen.split(":");
+      reassignTarget = { orderId, tripId };
+      render();
+    });
+  });
+  root.querySelectorAll("[data-status-order]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const cur = btn.dataset.statusCurrent;
+      const next = STATUS_ORDER[(STATUS_ORDER.indexOf(cur) + 1) % STATUS_ORDER.length];
+      setTripStatus(btn.dataset.statusOrder, btn.dataset.statusTrip, next);
+      render();
+    });
+  });
+}
+
+syncQueuePriority();
+render();
+
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
